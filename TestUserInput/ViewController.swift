@@ -129,13 +129,6 @@ class ViewController: UIViewController, UITextFieldDelegate {
         buttonLabel.text = numberToSend
     }
     
-    let validationFormatter: NumberFormatter = {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        formatter.maximumFractionDigits = 3
-        return formatter
-    }()
-    
     var lastEnteredText: String = ""
     let allowedCharacters = CharacterSet(charactersIn: "0123456789., ")
     
@@ -143,7 +136,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
         guard with != lastEnteredText else { return }
         let text = with.replacingOccurrences(of: Locale.current.groupingSeparator ?? "nil", with: "").replacingOccurrences(of: Locale.current.decimalSeparator ?? "nil", with: ".")
         
-        let number = validationFormatter.number(from: text) ?? 0
+        let number = appFormatter.number(from: text) ?? 0
         var formattedValue = appFormatter.string(from: number) ?? ""
         
         if with.suffix(1) == Locale.current.decimalSeparator ?? "nil" {
