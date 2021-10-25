@@ -30,14 +30,14 @@ class ViewController: UIViewController {
         content.textField.addTarget(self, action: #selector(manageInputFormat), for: .editingChanged)
         content.button.addTarget(self, action: #selector(didPressOnButton), for: .touchUpInside)
         
-        let number = Formatter.server.number(from: self.serverData) ?? 0
-        content.label.text = Formatter.local.string(from: number)
+        let number = ReadingsFormatter.server.number(from: self.serverData) ?? 0
+        content.label.text = ReadingsFormatter.local.string(from: number)
     }
     
     @objc func didPressOnButton() {
         let text = content.textField.text ?? "nil"
-        let number = Formatter.local.number(from: text) ?? -1
-        let numberToSend = Formatter.server.string(from: number) ?? "nil"
+        let number = ReadingsFormatter.local.number(from: text) ?? -1
+        let numberToSend = ReadingsFormatter.server.string(from: number) ?? "nil"
         content.buttonLabel.text = numberToSend
     }
     
@@ -47,11 +47,12 @@ class ViewController: UIViewController {
     @objc func manageInputFormat() {
         guard
             let userInput = content.textField.text,
-            Formatter.allowedCharacters.isSuperset(of: CharacterSet(charactersIn: userInput)),
-            userInput.components(separatedBy: Formatter.local.decimalSeparator).count < 3,
-            userInput.numberInStringHasLessThanOrEqualTo(numberOfFractionalDigits: Formatter.local.maximumFractionDigits)
+            ReadingsFormatter.allowedCharacters.isSuperset(of: CharacterSet(charactersIn: userInput)),
+            userInput.components(separatedBy: ReadingsFormatter.local.decimalSeparator).count < 3,
+            userInput.numberInStringHasLessThanOrEqualTo(numberOfFractionalDigits: ReadingsFormatter.local.maximumFractionDigits)
         else {
             content.textField.text = lastEnteredText
+            setPosition(isInputValid: false)
             return
         }
         
@@ -61,18 +62,70 @@ class ViewController: UIViewController {
         
         lastEnteredText = formattedInput
         content.textField.text = formattedInput
+        setPosition(isInputValid: true)
     }
     
     //MARK: -- Cursor Section
-    var lastPosition: UITextPosition = UITextPosition()
+    enum TextFieldChangeType {
+        case insert
+        case deleteOne
+        case deleteSelection
+    }
     
-    func setPosition() {
+    var changeType: TextFieldChangeType = .deleteOne
+    var lastPosition: Int = 0
+    var lengthOfInput: Int = 0
+    var previousInput: String = ""
+    
+    func setPosition(isInputValid: Bool) {
+        let textField = content.textField
         
+        guard isInputValid else {
+            if let samePosition = textField.position(from: textField.beginningOfDocument, offset: lastPosition) {
+                textField.selectedTextRange = textField.textRange(from: samePosition, to: samePosition)
+            }
+            return
+        }
+        
+        var offset: Int = 0
+        
+        guard let currentInput = textField.text else { return }
+        
+        switch changeType {
+        case .insert:
+            offset = (lastPosition + lengthOfInput).includingSeparators(previousInput: previousInput, currentInput: currentInput)
+        case .deleteOne:
+            offset = (lastPosition - 1).includingSeparators(previousInput: previousInput, currentInput: currentInput)
+        case .deleteSelection:
+            offset = (lastPosition - lengthOfInput).includingSeparators(previousInput: previousInput, currentInput: currentInput)
+        }
+        
+        if let newPosition = textField.position(from: textField.beginningOfDocument, offset: offset) {
+            textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
+        }
     }
 }
 
 extension ViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+
+        if let selectedRange = textField.selectedTextRange {
+            let cursorPosition = textField.offset(from: textField.beginningOfDocument, to: selectedRange.start)
+            
+            lastPosition = cursorPosition
+            lengthOfInput = string.count
+            
+            if string.count > 0 {
+                changeType = .insert
+            } else if range.length == 1 {
+                changeType = .deleteOne
+            } else {
+                changeType = .deleteSelection
+            }
+            
+            previousInput = textField.text ?? ""
+        }
+        
         return true
     }
 }

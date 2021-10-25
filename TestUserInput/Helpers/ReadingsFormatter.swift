@@ -7,7 +7,7 @@
 
 import UIKit
 
-class Formatter {
+class ReadingsFormatter {
     static let local: NumberFormatter = {
         let formatter = NumberFormatter()
         formatter.numberStyle = .decimal

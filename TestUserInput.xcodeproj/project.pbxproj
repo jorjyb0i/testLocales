@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4D28BD832725C13F00699A4B /* IntExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D28BD822725C13F00699A4B /* IntExtension.swift */; };
 		4D6C92FD27143093004D22CF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C92FC27143093004D22CF /* AppDelegate.swift */; };
 		4D6C92FF27143093004D22CF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C92FE27143093004D22CF /* SceneDelegate.swift */; };
 		4D6C930127143093004D22CF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D6C930027143093004D22CF /* ViewController.swift */; };
@@ -14,11 +15,12 @@
 		4D6C930627143095004D22CF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 4D6C930527143095004D22CF /* Assets.xcassets */; };
 		4D6C930927143095004D22CF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4D6C930727143095004D22CF /* LaunchScreen.storyboard */; };
 		4DFDF1C827202D2E00D35A95 /* View.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFDF1C727202D2D00D35A95 /* View.swift */; };
-		4DFDF1CA27202F6400D35A95 /* Formatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFDF1C927202F6400D35A95 /* Formatter.swift */; };
+		4DFDF1CA27202F6400D35A95 /* ReadingsFormatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFDF1C927202F6400D35A95 /* ReadingsFormatter.swift */; };
 		4DFDF1CC2720301D00D35A95 /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DFDF1CB2720301D00D35A95 /* StringExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		4D28BD822725C13F00699A4B /* IntExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IntExtension.swift; sourceTree = "<group>"; };
 		4D6C92F927143093004D22CF /* TestUserInput.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TestUserInput.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4D6C92FC27143093004D22CF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		4D6C92FE27143093004D22CF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -28,7 +30,7 @@
 		4D6C930827143095004D22CF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		4D6C930A27143095004D22CF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		4DFDF1C727202D2D00D35A95 /* View.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = View.swift; sourceTree = "<group>"; };
-		4DFDF1C927202F6400D35A95 /* Formatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatter.swift; sourceTree = "<group>"; };
+		4DFDF1C927202F6400D35A95 /* ReadingsFormatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingsFormatter.swift; sourceTree = "<group>"; };
 		4DFDF1CB2720301D00D35A95 /* StringExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -87,7 +89,8 @@
 			isa = PBXGroup;
 			children = (
 				4DFDF1CB2720301D00D35A95 /* StringExtension.swift */,
-				4DFDF1C927202F6400D35A95 /* Formatter.swift */,
+				4D28BD822725C13F00699A4B /* IntExtension.swift */,
+				4DFDF1C927202F6400D35A95 /* ReadingsFormatter.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -165,8 +168,9 @@
 			files = (
 				4DFDF1C827202D2E00D35A95 /* View.swift in Sources */,
 				4D6C930127143093004D22CF /* ViewController.swift in Sources */,
+				4D28BD832725C13F00699A4B /* IntExtension.swift in Sources */,
 				4DFDF1CC2720301D00D35A95 /* StringExtension.swift in Sources */,
-				4DFDF1CA27202F6400D35A95 /* Formatter.swift in Sources */,
+				4DFDF1CA27202F6400D35A95 /* ReadingsFormatter.swift in Sources */,
 				4D6C92FD27143093004D22CF /* AppDelegate.swift in Sources */,
 				4D6C92FF27143093004D22CF /* SceneDelegate.swift in Sources */,
 			);
