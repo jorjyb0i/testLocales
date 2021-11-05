@@ -24,8 +24,8 @@ class MainView: UIView {
         label.text = "Text Field:"
         return label
     }()
-    let textField: StrangeTextField = {
-        let textField = StrangeTextField()
+    let textField: UITextField = {
+        let textField = UITextField()
         textField.backgroundColor = .white
         textField.keyboardType = .decimalPad
         textField.textAlignment = .center

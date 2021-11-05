@@ -27,6 +27,7 @@ class ViewController: UIViewController {
         view.backgroundColor = .lightGray
         
         content.textField.delegate = self
+        content.textField.pasteDelegate = self
         content.button.addTarget(self, action: #selector(didPressOnButton), for: .touchUpInside)
         
         let number = formatterManager.server.number(from: self.serverData) ?? 0
@@ -95,9 +96,9 @@ class ViewController: UIViewController {
     }
     
     //MARK: -- Cursor section
-    private func setPosition(of textField: UITextField, offset: Int) {
-        guard let newPosition = textField.position(from: textField.beginningOfDocument, offset: offset) else { return }
-        textField.selectedTextRange = textField.textRange(from: newPosition, to: newPosition)
+    private func getPosition(for textField: UITextField, offset: Int) -> UITextRange {
+        guard let newPosition = textField.position(from: textField.beginningOfDocument, offset: offset) else { return UITextRange() }
+        return textField.textRange(from: newPosition, to: newPosition) ?? UITextRange()
     }
 }
 
@@ -126,29 +127,66 @@ extension ViewController: UITextFieldDelegate {
         offset = offset >= 0 ? offset : 0
         
         guard lastEnteredText != formattedInput else {
-            setPosition(of: textField, offset: offset)
+            textField.selectedTextRange = getPosition(for: textField, offset: offset)
             return false
         }
     
         lastEnteredText = formattedInput
         textField.text = formattedInput
         
-        setPosition(of: textField, offset: offset)
+        textField.selectedTextRange = getPosition(for: textField, offset: offset)
         return false
     }
 }
 
-class StrangeTextField: UITextField {
-    override var selectedTextRange: UITextRange? {
-        set {
-            super.selectedTextRange = newValue
-            if let range = newValue {
-                print("SelectedRange: \n  Start: \(range.start)\n  End:   \(range.end)\n")
-            }
-        }
-        get {
-            return super.selectedTextRange
-        }
+extension ViewController: UITextPasteDelegate {
+    func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting, transform item: UITextPasteItem) {
+///        Tells the delegate to transform the pasted or dropped text item.
+
+        item.setDefaultResult()
+        return
+    }
+
+    func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting, combineItemAttributedStrings itemStrings: [NSAttributedString], for textRange: UITextRange) -> NSAttributedString {
+///        Asks the delegate to combine multiple strings into a single attributed string.
+        
+        let string = itemStrings.first?.string ?? ""
+        return NSAttributedString(string: string)
+    }
+
+    func textPasteConfigurationSupporting(_ textPasteConfigurationSupporting: UITextPasteConfigurationSupporting, performPasteOf attributedString: NSAttributedString, to textRange: UITextRange) -> UITextRange {
+///        Asks the delegate to explicitly handle the final incorporation of a pasted or dropped string of text into the text view.
+        
+        guard let textField = textPasteConfigurationSupporting as? UITextField,
+              let text = textField.text,
+              let selectedRange = textField.selectedTextRange
+        else { return textRange }
+        
+        let string = attributedString.string
+        
+        let location = textField.offset(from: textField.beginningOfDocument, to: selectedRange.start)
+        let length = textField.offset(from: selectedRange.start, to: selectedRange.end)
+        let range = NSRange(location: location, length: length)
+        
+        
+        let hasComeFromUserInput = !(range.length == 0 && string.isEmpty)
+        guard
+            hasComeFromUserInput,
+            let userInput = (text as NSString?)?.replacingCharacters(in: range, with: string),
+            isInputValid(input: userInput)
+        else { return textRange }
+        
+///        Here was path for deleting single grouping separator
+        
+        let formattedInput = format(userInput: userInput)
+        var offset = formattedInput.count - (lastEnteredText.count - (range.location + range.length))
+        offset = offset >= 0 ? offset : 0
+        
+///        Here was path for input of similar text
+        
+        lastEnteredText = formattedInput
+        textField.text = formattedInput
+        
+        return getPosition(for: textField, offset: offset)
     }
 }
-
